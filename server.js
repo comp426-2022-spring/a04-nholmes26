@@ -1,5 +1,6 @@
 // Allow require in js module
 import { createRequire } from 'module';
+import morgan from 'morgan';
 import logdb from './logdb.cjs';
 const require = createRequire(import.meta.url)
 
