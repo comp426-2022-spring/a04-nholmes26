@@ -1,5 +1,6 @@
 // Allow require in js module
 import { createRequire } from 'module';
+import logdb from './logdb.cjs';
 const require = createRequire(import.meta.url)
 
 // Require express
@@ -72,3 +73,49 @@ app.use(function(req, res){
     // Default response for any other request
     res.status(404).send('404 NOT FOUND')
 });
+
+//Middleware
+app.use( (req, res, next) => {
+    let logdata = {
+        remoteaddr: req.ip,
+        remoteuser: req.user,
+        time: Date.now(),
+        method: req.method,
+        url: req.url,
+        protocol: req.protocol,
+        httpversion: req.httpVersion,
+        secure: req.secure,
+        status: res.statusCode,
+        referer: req.headers['referer'],
+        useragent: req.headers['user-agent']
+    }
+    next();
+})
+
+// Import database
+require('./logdb.cjs');
+
+// Endpoint to return all records in accesslog
+app.get('/app/log/access', (req, res) => {
+    res.statusCode = 200;
+    res.json(logdb);
+});
+
+//Endpoint to return errors
+app.get('/app/error', (req, res) => {
+    res.statusCode = 200;
+    function errorHandler (err, req, res, next) {
+        if (res.headersSent) {
+          return next(err)
+        }
+        res.status(500)
+        res.render('Error test successful.', { error: err })
+      }
+});
+
+const fs = require('fs');
+// Use morgan for logging to files
+// Create a write stream to append (flags: 'a') to a file
+const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
+// Set up the access logging middleware
+app.use(morgan('accesslog', { stream: WRITESTREAM }));
