@@ -23,7 +23,7 @@ if (row === undefined) {
             httpversion NUMERIC, 
             secure VARCHAR,
             status INTEGER, 
-            referrer VARCHAR,
+            referer VARCHAR,
             useragent VARCHAR
         );
     `
