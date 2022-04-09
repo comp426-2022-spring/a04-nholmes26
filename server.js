@@ -93,7 +93,7 @@ if (args['log'] == true) {
     // Create a write stream to append (flags: 'a') to a file
     const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
     // Set up the access logging middleware
-    app.use(morgan('combined', { stream: WRITESTREAM }));
+    app.use(morgan('accesslog', { stream: WRITESTREAM }));
 }
 
 //Middleware
@@ -123,8 +123,9 @@ app.use( (req, res, next) => {
 if (args['debug'] == true) {
     // Endpoint to return all records in accesslog
     app.get('/app/log/access', (req, res) => {
+        const stmt = db.prepare('SELECT * FROM accesslog').all()
         res.statusCode = 200;
-        res.json(db);
+        res.json(stmt);
     });
 
     //Endpoint to return errors
