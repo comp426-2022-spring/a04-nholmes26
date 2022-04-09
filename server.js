@@ -110,7 +110,9 @@ app.use( (req, res, next) => {
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
-    const stmt = db.prepare("insert into accesslogs values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    const stmt = db.prepare((`INSERT INTO accesslogs (remoteaddr, remoteuser, time, 
+        method, url, protocol, httpversion, secure, status, referer, useragent) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`))
     
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time,
             logdata.method, logdata.url, logdata.protocol,
