@@ -1,6 +1,6 @@
 "use strict";
 
-import database from 'better-sqlite3';
+const database = require('better-sqlite3');
 
 const db = new database('log.db')
 
@@ -32,4 +32,4 @@ if (row === undefined) {
     console.log('Log database exists.')
 }
 
-export default db;
+module.exports = db;

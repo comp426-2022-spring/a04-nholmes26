@@ -1,11 +1,8 @@
-// Allow require in js module
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url)
 // Require express
 var express = require('express')
 var app = express()
 // Require database and md5
-const db = import("./logdb.js")
+const db = require("./logdb.js")
 // Express to use built-in body parsernp
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -34,7 +31,7 @@ if (args['help']) {
 }
 
 // Import necessary coin functions
-import { coinFlip, coinFlips, countFlips, flipACoin } from "./modules/coin.mjs";
+const coinfuncs = require("./modules/coin.js");
 
 // Start an app server
 const server = app.listen(port, () => { 

@@ -14,7 +14,7 @@
  * 
  */
 
-export function coinFlip() {
+function coinFlip() {
   var x = Math.floor(Math.random() * 2); //generate a 1 or a 0 to represent Heads or Tails
   if (x == 1) {
     return 'heads';
@@ -42,7 +42,7 @@ export function coinFlip() {
     ]
  */
 
-export function coinFlips(flips) {
+function coinFlips(flips) {
   var results = [];
   for (let i = 0; i < flips; i++) {
     results.push(coinFlip());//coinFlip done 'flips' number of times, result added to array
@@ -63,7 +63,7 @@ export function coinFlips(flips) {
  * @returns {{ heads: number, tails: number }}
  */
 
-export function countFlips(array) {
+function countFlips(array) {
   var heads_c = 0;
   var tails_c = 0;
   for (var flip of array) {
@@ -93,7 +93,7 @@ export function countFlips(array) {
  * returns: { call: 'tails', flip: 'heads', result: 'lose' }
  */
 
-export function flipACoin(call) {
+function flipACoin(call) {
   const resultant = coinFlip();
   if (call == resultant) {
     return { call: call, flip: resultant, result: 'win' };
@@ -107,3 +107,4 @@ export function flipACoin(call) {
  * 
  * Export all of your named functions
 */
+module.exports = { coinFlip, coinFlips, countFlips, flipACoin };
