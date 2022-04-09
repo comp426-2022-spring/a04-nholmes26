@@ -90,11 +90,6 @@ app.get('/app/flip/call/tails', (req, res) => { // Flip a coin, call heads, comp
     res.json(flipACoin('tails'));
 });
 
-app.use(function(req, res){
-    // Default response for any other request
-    res.status(404).send('404 NOT FOUND')
-});
-
 //Middleware
 app.use( (req, res, next) => {
     let logdata = {
@@ -110,9 +105,7 @@ app.use( (req, res, next) => {
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
-    const stmt = db.prepare((`INSERT INTO accesslogs (remoteaddr, remoteuser, time, 
-        method, url, protocol, httpversion, secure, status, referer, useragent) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`))
+    const stmt = db.prepare("insert into accesslogs values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time,
             logdata.method, logdata.url, logdata.protocol,
@@ -149,3 +142,8 @@ if (args['log'] == true) {
     // Set up the access logging middleware
     app.use(morgan('accesslog', { stream: WRITESTREAM }));
 }
+
+app.use(function(req, res){
+    // Default response for any other request
+    res.status(404).send('404 NOT FOUND')
+});
