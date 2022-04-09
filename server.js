@@ -2,7 +2,7 @@
 var express = require('express')
 var app = express()
 // Require database and md5
-var db = require('./logdb.js')
+var db = require('./logdb.js').default
 var md5 = require("md5")
 // Express to use built-in body parser
 app.use(express.urlencoded({ extended: true }));
