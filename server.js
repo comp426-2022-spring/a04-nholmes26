@@ -110,8 +110,7 @@ app.use( (req, res, next) => {
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
-    const stmt = db.prepare(`UPDATE logdata SET ip = COALESCE(?,ip), user = COALESCE(?,user), time, 
-        method = COALESCE(?,method), url = COALESCE(?,url), protocol = COALESCE(?,protocol), httpversion = COALESCE(?,httpversion), secure = COALESCE(?,secure), statusCode = COALESCE(?,statusCode), referer = COALESCE(?,referer), user-agent = COALESCE(?,user-agent)`)
+    const stmt = db.prepare("insert into accesslogs (remoteaddr, remoteuser, time, method, url, protocol, httpversion, secure, status, referer, useragent) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
     
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time,
             logdata.method, logdata.url, logdata.protocol,
