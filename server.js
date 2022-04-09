@@ -124,7 +124,7 @@ if (args['debug'] == true) {
     // Endpoint to return all records in accesslog
     app.get('/app/log/access', (req, res) => {
         res.statusCode = 200;
-        res.json(logdb);
+        res.json(db);
     });
 
     //Endpoint to return errors
