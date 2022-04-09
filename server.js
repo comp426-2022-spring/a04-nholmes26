@@ -5,7 +5,7 @@ const require = createRequire(import.meta.url)
 var express = require('express')
 var app = express()
 // Require database and md5
-var db = import('./logdb.js')
+var db = require('./logdb.js')
 // Express to use built-in body parsernp
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
