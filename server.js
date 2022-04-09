@@ -115,7 +115,7 @@ app.use( (req, res, next) => {
     
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time,
             logdata.method, logdata.url, logdata.protocol,
-            logdata.httpversion, logdata.secure, logdata.status,
+            logdata.httpversion, logdata.status,
             logdata.referer, logdata.useragent)
     next();
 })
