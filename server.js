@@ -1,17 +1,35 @@
-// Allow require in js module
-import { createRequire } from 'module';
-import morgan from 'morgan';
-import logdb from './logdb.cjs';
-const require = createRequire(import.meta.url)
-
 // Require express
-const express = require('express')
-const app = express()
+var express = require('express')
+var app = express()
+// Require database and md5
+var db = require('./logdb.js')
+var md5 = require("md5")
+// Express to use built-in body parser
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Require minimist, set up port with default of 5000
 const args = require('minimist')(process.argv.slice(2))
 args['port']
 const port = args['port'] || process.env.PORT || 5000
+// set up help menu
+if (args['help']) {
+    console.log(`server.js [options]
+
+    --port	Set the port number for the server to listen on. Must be an integer
+                between 1 and 65535.
+  
+    --debug	If set to `,true`, creates endlpoints /app/log/access/ which returns
+                a JSON access log from the database and /app/error which throws 
+                an error with the message "Error test successful." Defaults to 
+                `,false`.
+  
+    --log		If set to false, no log files are written. Defaults to true.
+                Logs are always written to database.
+  
+    --help	Return this message and exit.`)
+    exit(EXIT_SUCCESS)
+}
 
 // Import necessary coin functions
 import { coinFlip, coinFlips, countFlips, flipACoin } from "./modules/coin.mjs";
@@ -93,30 +111,31 @@ app.use( (req, res, next) => {
     next();
 })
 
-// Import database
-require('./logdb.cjs');
+if (args['debug'] == true) {
+    // Endpoint to return all records in accesslog
+    app.get('/app/log/access', (req, res) => {
+        res.statusCode = 200;
+        res.json(logdb);
+    });
 
-// Endpoint to return all records in accesslog
-app.get('/app/log/access', (req, res) => {
-    res.statusCode = 200;
-    res.json(logdb);
-});
-
-//Endpoint to return errors
-app.get('/app/error', (req, res) => {
-    res.statusCode = 200;
-    function errorHandler (err, req, res, next) {
-        if (res.headersSent) {
-          return next(err)
+    //Endpoint to return errors
+    app.get('/app/error', (req, res) => {
+        res.statusCode = 200;
+        function errorHandler (err, req, res, next) {
+            if (res.headersSent) {
+            return next(err)
+            }
+            res.status(500)
+            res.render('Error test successful.', { error: err })
         }
-        res.status(500)
-        res.render('Error test successful.', { error: err })
-      }
-});
+    });
+}
 
-const fs = require('fs');
-// Use morgan for logging to files
-// Create a write stream to append (flags: 'a') to a file
-const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
-// Set up the access logging middleware
-app.use(morgan('accesslog', { stream: WRITESTREAM }));
+if (args['log'] == true) {
+    const fs = require('fs');
+    // Use morgan for logging to files
+    // Create a write stream to append (flags: 'a') to a file
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
+    // Set up the access logging middleware
+    app.use(morgan('accesslog', { stream: WRITESTREAM }));
+}
