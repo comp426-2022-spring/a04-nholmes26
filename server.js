@@ -90,6 +90,15 @@ app.get('/app/flip/call/tails', (req, res) => { // Flip a coin, call heads, comp
     res.json(flipACoin('tails'));
 });
 
+if (args['log'] == true) {
+    const fs = require('fs');
+    // Use morgan for logging to files
+    // Create a write stream to append (flags: 'a') to a file
+    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
+    // Set up the access logging middleware
+    app.use(morgan('accesslog', { stream: WRITESTREAM }));
+}
+
 //Middleware
 app.use( (req, res, next) => {
     let logdata = {
@@ -105,7 +114,7 @@ app.use( (req, res, next) => {
         referer: req.headers['referer'],
         useragent: req.headers['user-agent']
     }
-    const stmt = db.prepare(`insert into accesslogs values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const stmt = db.prepare(`insert into accesslogs values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     
     const info = stmt.run(logdata.remoteaddr, logdata.remoteuser, logdata.time,
             logdata.method, logdata.url, logdata.protocol,
@@ -132,15 +141,6 @@ if (args['debug'] == true) {
             res.render('Error test successful.', { error: err })
         }
     });
-}
-
-if (args['log'] == true) {
-    const fs = require('fs');
-    // Use morgan for logging to files
-    // Create a write stream to append (flags: 'a') to a file
-    const WRITESTREAM = fs.createWriteStream('access.log', { flags: 'a' });
-    // Set up the access logging middleware
-    app.use(morgan('accesslog', { stream: WRITESTREAM }));
 }
 
 app.use(function(req, res){
