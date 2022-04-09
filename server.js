@@ -130,14 +130,7 @@ if (args['debug'] == true) {
 
     //Endpoint to return errors
     app.get('/app/error', (req, res) => {
-        res.statusCode = 200;
-        function errorHandler (err, req, res, next) {
-            if (res.headersSent) {
-            return next(err)
-            }
-            res.status(500)
-            res.render('Error test successful.', { error: err })
-        }
+        throw new Error('Error test successful.')
     });
 }
 
