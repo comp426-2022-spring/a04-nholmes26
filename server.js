@@ -1,10 +1,12 @@
+// Allow require in js module
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url)
 // Require express
 var express = require('express')
 var app = express()
 // Require database and md5
-var db = require('./logdb.js').default
-var md5 = require("md5")
-// Express to use built-in body parser
+var db = import('./logdb.js')
+// Express to use built-in body parsernp
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
