@@ -27,7 +27,7 @@ if (args['help']) {
                 Logs are always written to database.
   
     --help	Return this message and exit.`)
-    exit(EXIT_SUCCESS)
+    process.exit(0)
 }
 
 // Import necessary coin functions
