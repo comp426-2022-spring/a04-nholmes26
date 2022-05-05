@@ -1,0 +1,26 @@
+{
+  "name": "a04-nholmes26",
+  "version": "1.0.0",
+  "description": "Creating a database",
+  "main": "server.js",
+  "scripts": {
+    "test": "\\\"node server.js --help\\\"",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comp426-2022-spring/a04-nholmes26.git"
+  },
+  "author": "Nathan Holmes",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/comp426-2022-spring/a04-nholmes26/issues"
+  },
+  "homepage": "https://github.com/comp426-2022-spring/a04-nholmes26#readme",
+  "dependencies": {
+    "better-sqlite3": "^7.5.0",
+    "express": "^4.17.3",
+    "minimist": "^1.2.6",
+    "morgan": "^1.10.0"
+  }
+}
